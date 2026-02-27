@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WickraD Tools | Professional Online Toolkit</title>
+    <title>WickraD Tools | Advanced Interactive Toolkit</title>
     
     <script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -24,152 +25,136 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Abhaya+Libre:wght@400;700&display=swap');
-        body { font-family: 'Poppins', sans-serif; background-color: #0a0a0c; color: #d1d1d1; }
+        body { font-family: 'Poppins', sans-serif; background-color: #0a0a0c; color: #d1d1d1; overflow-x: hidden; }
         .sinhala-font { font-family: 'Abhaya Libre', serif; }
-        .tool-card { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.05); position: relative; }
-        .tool-card:hover { transform: translateY(-8px); border-color: #00f2ff; box-shadow: 0 10px 30px -10px rgba(0, 242, 255, 0.3); }
+        .tool-card { transition: 0.3s; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
+        .tool-card:hover { transform: translateY(-5px); border-color: #00f2ff; box-shadow: 0 10px 20px -10px rgba(0, 242, 255, 0.3); }
         .neon-text { color: #00f2ff; text-shadow: 0 0 10px rgba(0, 242, 255, 0.5); }
-        .lang-btn { transition: 0.3s; border: 1px solid #333; font-size: 0.75rem; padding: 4px 12px; border-radius: 8px; }
-        .active-lang { border-color: #00f2ff; color: #00f2ff; }
         
-        /* Star Rating Styles */
-        .star-rating { display: flex; gap: 4px; margin-top: 15px; }
-        .star { cursor: pointer; font-size: 1.2rem; color: #333; transition: 0.2s; }
-        .star.active { color: #00f2ff; text-shadow: 0 0 8px rgba(0, 242, 255, 0.8); }
+        /* Modal Styles */
+        #toolModal { transition: 0.3s ease-in-out; opacity: 0; pointer-events: none; }
+        #toolModal.active { opacity: 1; pointer-events: auto; }
+        .modal-content { transform: scale(0.9); transition: 0.3s; }
+        #toolModal.active .modal-content { transform: scale(1); }
     </style>
 </head>
 <body>
 
-    <header class="py-10 text-center bg-cardbg border-b border-gray-800">
-        <div class="mb-6 flex justify-center gap-3">
-            <button id="btn-en" onclick="setLanguage('en')" class="lang-btn active-lang">English</button>
-            <button id="btn-si" onclick="setLanguage('si')" class="lang-btn">සිංහල</button>
-        </div>
-        <h1 id="main-title" class="text-4xl font-bold neon-text tracking-wide">WickraD Tools</h1>
-        <p id="main-subtitle" class="text-gray-500 mt-2">Fast, Free and Secure Professional Web Tools</p>
+    <div class="fixed top-4 right-4 z-50 flex gap-2">
+        <button onclick="setLanguage('en')" class="bg-cardbg border border-gray-700 text-[10px] px-3 py-1 rounded-full hover:border-neonblue">EN</button>
+        <button onclick="setLanguage('si')" class="bg-cardbg border border-gray-700 text-[10px] px-3 py-1 rounded-full hover:border-neonblue">සිංහල</button>
+    </div>
+
+    <header class="py-16 text-center">
+        <h1 id="main-title" class="text-5xl font-extrabold neon-text tracking-tighter italic">WICKRAD TOOLS</h1>
+        <p id="main-subtitle" class="text-gray-600 mt-2 tracking-widest uppercase text-xs">Professional Digital Solutions</p>
     </header>
 
-    <main class="max-w-6xl mx-auto p-6 md:p-12">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            
-            <div class="tool-card bg-cardbg p-8 rounded-3xl flex flex-col">
-                <div class="text-3xl mb-4 bg-neonblue_dim w-14 h-14 flex items-center justify-center rounded-2xl text-neonblue">📝</div>
-                <h2 id="t1-title" class="text-xl font-bold text-white mb-2">Word Counter</h2>
-                <p id="t1-desc" class="text-gray-500 text-sm mb-6 flex-grow">Count words and characters in your text instantly.</p>
-                <textarea id="wordInput" class="w-full p-4 bg-darkbg border border-gray-700 rounded-xl text-sm mb-4 outline-none focus:border-neonblue" rows="4"></textarea>
-                
-                <div class="star-rating" data-tool="word">
-                    <span class="star" onclick="rate(this, 1)">★</span>
-                    <span class="star" onclick="rate(this, 2)">★</span>
-                    <span class="star" onclick="rate(this, 3)">★</span>
-                    <span class="star" onclick="rate(this, 4)">★</span>
-                    <span class="star" onclick="rate(this, 5)">★</span>
-                    <span id="rate-text-word" class="ml-2 text-[10px] text-gray-600 self-center uppercase">Rate this</span>
-                </div>
-            </div>
-
-            <div class="tool-card bg-cardbg p-8 rounded-3xl flex flex-col">
-                <div class="text-3xl mb-4 bg-neonblue_dim w-14 h-14 flex items-center justify-center rounded-2xl text-neonblue">🔐</div>
-                <h2 id="t2-title" class="text-xl font-bold text-white mb-2">Password Generator</h2>
-                <p id="t2-desc" class="text-gray-500 text-sm mb-6 flex-grow">Generate strong passwords to secure your accounts.</p>
-                <input type="text" id="passwordOutput" readonly class="w-full p-4 bg-darkbg border border-gray-700 rounded-xl text-sm mb-4 text-center text-neonblue font-mono tracking-wider">
-                <button onclick="generatePassword()" id="t2-btn" class="w-full py-3 bg-neonblue text-black font-bold rounded-xl text-xs uppercase tracking-tighter hover:bg-white transition">Generate</button>
-                
-                <div class="star-rating" data-tool="pass">
-                    <span class="star" onclick="rate(this, 1)">★</span>
-                    <span class="star" onclick="rate(this, 2)">★</span>
-                    <span class="star" onclick="rate(this, 3)">★</span>
-                    <span class="star" onclick="rate(this, 4)">★</span>
-                    <span class="star" onclick="rate(this, 5)">★</span>
-                    <span id="rate-text-pass" class="ml-2 text-[10px] text-gray-600 self-center uppercase">Rate this</span>
-                </div>
-            </div>
-
-            <div class="tool-card bg-cardbg p-8 rounded-3xl flex flex-col">
-                <div class="text-3xl mb-4 bg-neonblue_dim w-14 h-14 flex items-center justify-center rounded-2xl text-neonblue">📷</div>
-                <h2 id="t3-title" class="text-xl font-bold text-white mb-2">Image to Text</h2>
-                <p id="t3-desc" class="text-gray-500 text-sm mb-6 flex-grow">Extract editable text from images using OCR technology.</p>
-                <label for="imageInput" id="t3-label" class="block w-full py-4 border-2 border-dashed border-gray-700 rounded-xl text-center text-xs cursor-pointer hover:border-neonblue text-gray-400">Upload Image</label>
-                <input type="file" id="imageInput" accept="image/*" class="hidden">
-                <p id="statusText" class="text-[10px] text-center mt-2 text-neonblue"></p>
-                
-                <div class="star-rating pt-4" data-tool="ocr">
-                    <span class="star" onclick="rate(this, 1)">★</span>
-                    <span class="star" onclick="rate(this, 2)">★</span>
-                    <span class="star" onclick="rate(this, 3)">★</span>
-                    <span class="star" onclick="rate(this, 4)">★</span>
-                    <span class="star" onclick="rate(this, 5)">★</span>
-                    <span id="rate-text-ocr" class="ml-2 text-[10px] text-gray-600 self-center uppercase">Rate this</span>
-                </div>
-            </div>
-
+    <main class="max-w-6xl mx-auto p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <div onclick="openTool('qr-gen')" class="tool-card bg-cardbg p-8 rounded-3xl text-center">
+            <div class="text-4xl mb-4">🔗</div>
+            <h2 id="t1-title" class="text-xl font-bold text-white">QR Generator</h2>
+            <p class="text-gray-500 text-xs mt-2">Create custom QR codes instantly.</p>
         </div>
+
+        <div onclick="openTool('qr-scan')" class="tool-card bg-cardbg p-8 rounded-3xl text-center">
+            <div class="text-4xl mb-4">🔍</div>
+            <h2 id="t2-title" class="text-xl font-bold text-white">QR Scanner</h2>
+            <p class="text-gray-500 text-xs mt-2">Scan QR codes using your camera.</p>
+        </div>
+
+        <div onclick="openTool('pass-gen')" class="tool-card bg-cardbg p-8 rounded-3xl text-center">
+            <div class="text-4xl mb-4">🔐</div>
+            <h2 id="t3-title" class="text-xl font-bold text-white">Password Maker</h2>
+            <p class="text-gray-500 text-xs mt-2">Generate ultra-secure passwords.</p>
+        </div>
+
     </main>
 
-    <footer class="text-center py-12 border-t border-gray-900 mt-12 text-gray-700 text-[10px] tracking-widest uppercase">
-        © 2026 WickraD Tools | Futuristic Utility
-    </footer>
+    <div id="toolModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm">
+        <div class="modal-content bg-cardbg w-full max-w-lg p-8 rounded-[40px] border border-gray-800 relative">
+            <button onclick="closeTool()" class="absolute top-6 right-6 text-gray-500 hover:text-white text-2xl">&times;</button>
+            
+            <div id="modal-body">
+                </div>
+        </div>
+    </div>
 
     <script>
-        // Language & Tools Logic (Previous Logic Included)
         const langData = {
-            'en': { 'title': 'WickraD Tools', 'subtitle': 'Fast, Free and Secure Professional Web Tools', 't1': 'Word Counter', 't2': 'Password Generator', 't3': 'Image to Text', 't2b': 'Generate', 't3l': 'Upload Image', 'rate': 'Rate this', 'thanks': 'Thanks!' },
-            'si': { 'title': 'WickraD මෙවලම්', 'subtitle': 'ඉතා වේගවත් සහ ආරක්ෂිත වෘත්තීය වෙබ් මෙවලම්', 't1': 'වචන ගණනය', 't2': 'මුරපද නිර්මාණය', 't3': 'පින්තූරයෙන් අකුරු ගැනීම', 't2b': 'සාදන්න', 't3l': 'පින්තූරය තෝරන්න', 'rate': 'අගයන්න', 'thanks': 'ස්තුතියි!' }
+            'en': { 'title': 'WICKRAD TOOLS', 'sub': 'Professional Digital Solutions', 't1': 'QR Generator', 't2': 'QR Scanner', 't3': 'Password Maker' },
+            'si': { 'title': 'WICKRAD මෙවලම්', 'sub': 'වෘත්තීය ඩිජිටල් විසඳුම්', 't1': 'QR සාදන්න', 't2': 'QR ස්කෑන් කරන්න', 't3': 'මුරපද සාදන්න' }
         };
 
         function setLanguage(lang) {
             document.getElementById('main-title').innerText = langData[lang].title;
-            document.getElementById('main-subtitle').innerText = langData[lang].subtitle;
+            document.getElementById('main-subtitle').innerText = langData[lang].sub;
             document.getElementById('t1-title').innerText = langData[lang].t1;
             document.getElementById('t2-title').innerText = langData[lang].t2;
             document.getElementById('t3-title').innerText = langData[lang].t3;
-            document.getElementById('t2-btn').innerText = langData[lang].t2b;
-            document.getElementById('t3-label').innerText = langData[lang].t3l;
-            
-            // Update rate labels
-            document.querySelectorAll('[id^="rate-text-"]').forEach(el => {
-                if(el.innerText !== "Thanks!" && el.innerText !== "ස්තුතියි!") el.innerText = langData[lang].rate;
-            });
-
-            document.getElementById('btn-en').classList.remove('active-lang');
-            document.getElementById('btn-si').classList.remove('active-lang');
-            document.getElementById('btn-' + lang).classList.add('active-lang');
-            
-            if(lang === 'si') document.body.classList.add('sinhala-font');
-            else document.body.classList.remove('sinhala-font');
+            document.body.classList.toggle('sinhala-font', lang === 'si');
         }
 
-        // Rating Function
-        function rate(star, val) {
-            const parent = star.parentElement;
-            const stars = parent.querySelectorAll('.star');
-            const toolId = parent.getAttribute('data-tool');
-            const lang = document.getElementById('btn-si').classList.contains('active-lang') ? 'si' : 'en';
-
-            stars.forEach((s, index) => {
-                if (index < val) s.classList.add('active');
-                else s.classList.remove('active');
-            });
+        function openTool(tool) {
+            const modal = document.getElementById('toolModal');
+            const body = document.getElementById('modal-body');
+            modal.classList.add('active');
             
-            document.getElementById('rate-text-' + toolId).innerText = langData[lang].thanks;
-            document.getElementById('rate-text-' + toolId).style.color = "#00f2ff";
+            if(tool === 'qr-gen') {
+                body.innerHTML = `
+                    <h2 class="text-2xl font-bold text-neonblue mb-4">QR Code Generator</h2>
+                    <input type="text" id="qrInput" class="w-full p-4 bg-darkbg border border-gray-700 rounded-2xl mb-4 outline-none focus:border-neonblue" placeholder="Enter link or text...">
+                    <button onclick="genQR()" class="w-full py-4 bg-neonblue text-black font-bold rounded-2xl uppercase text-xs">Generate QR</button>
+                    <div id="qrResult" class="mt-6 flex justify-center hidden bg-white p-4 rounded-2xl mx-auto w-48 h-48">
+                        <img id="qrImg" src="" alt="QR">
+                    </div>
+                `;
+            } else if(tool === 'qr-scan') {
+                body.innerHTML = `
+                    <h2 class="text-2xl font-bold text-neonblue mb-4">QR Code Scanner</h2>
+                    <div id="reader" class="overflow-hidden rounded-2xl border border-gray-800"></div>
+                    <p id="scanRes" class="mt-4 text-center text-neonblue font-bold break-all"></p>
+                    <button onclick="startScan()" class="w-full mt-4 py-4 border border-neonblue text-neonblue rounded-2xl text-xs uppercase">Start Camera</button>
+                `;
+            } else if(tool === 'pass-gen') {
+                body.innerHTML = `
+                    <h2 class="text-2xl font-bold text-neonblue mb-4">Secure Password Maker</h2>
+                    <div id="pOutput" class="p-6 bg-darkbg border border-gray-700 rounded-2xl text-center text-neonblue font-mono text-xl mb-4">********</div>
+                    <button onclick="makePass()" class="w-full py-4 bg-neonblue text-black font-bold rounded-2xl uppercase text-xs">Generate New</button>
+                `;
+            }
         }
 
-        // Previous Tool Functions
-        function generatePassword() {
-            let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-            let res = "";
-            for (let i = 0; i < 16; i++) res += charset.charAt(Math.floor(Math.random() * charset.length));
-            document.getElementById('passwordOutput').value = res;
+        function closeTool() {
+            document.getElementById('toolModal').classList.remove('active');
+            if(window.html5QrCode) window.html5QrCode.stop();
         }
 
-        document.getElementById('wordInput').addEventListener('input', function() {
-            let val = this.value.trim();
-            document.getElementById('wordCount').innerText = val ? val.split(/\s+/).length : 0;
-            document.getElementById('charCount').innerText = val.length;
-        });
+        // Tool Logic
+        function genQR() {
+            const val = document.getElementById('qrInput').value;
+            if(!val) return;
+            document.getElementById('qrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(val)}`;
+            document.getElementById('qrResult').classList.remove('hidden');
+        }
 
-        generatePassword();
+        function startScan() {
+            const html5QrCode = new Html5Qrcode("reader");
+            window.html5QrCode = html5QrCode;
+            html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 },
+                (decodedText) => {
+                    document.getElementById('scanRes').innerText = "Result: " + decodedText;
+                    html5QrCode.stop();
+                }
+            );
+        }
+
+        function makePass() {
+            let c = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+            let r = ""; for(let i=0; i<14; i++) r += c.charAt(Math.floor(Math.random()*c.length));
+            document.getElementById('pOutput').innerText = r;
+        }
     </script>
 </body>
 </html>
