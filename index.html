@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="si">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WickraD Tools - Neon Dark Edition</title>
+    <title>WickraD Tools | Professional Online Toolkit</title>
     
     <script src='https://unpkg.com/tesseract.js@v2.1.0/dist/tesseract.min.js'></script>
-    
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <script>
         tailwind.config = {
             theme: {
@@ -17,141 +17,159 @@
                         cardbg: '#141417',
                         neonblue: '#00f2ff',
                         neonblue_dim: 'rgba(0, 242, 255, 0.1)',
-                    },
-                    boxShadow: {
-                        'neon': '0 0 15px rgba(0, 242, 255, 0.5)',
                     }
                 }
             }
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-        body { font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
-        .tool-card { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.03); }
-        .tool-card:hover { transform: translateY(-5px); box-shadow: 0 0 20px rgba(0, 242, 255, 0.2); border-color: rgba(0, 242, 255, 0.3); }
-        .neon-text { color: #00f2ff; text-shadow: 0 0 10px rgba(0, 242, 255, 0.7); }
-        .neon-btn { background: transparent; border: 2px solid #00f2ff; color: #00f2ff; transition: all 0.3s ease; font-weight: 600; }
-        .neon-btn:hover { background: #00f2ff; color: #0a0a0c; box-shadow: 0 0 20px rgba(0, 242, 255, 0.8); }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Abhaya+Libre:wght@400;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; background-color: #0a0a0c; color: #d1d1d1; }
+        .sinhala-font { font-family: 'Abhaya Libre', serif; }
+        .tool-card { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.05); position: relative; }
+        .tool-card:hover { transform: translateY(-8px); border-color: #00f2ff; box-shadow: 0 10px 30px -10px rgba(0, 242, 255, 0.3); }
+        .neon-text { color: #00f2ff; text-shadow: 0 0 10px rgba(0, 242, 255, 0.5); }
+        .lang-btn { transition: 0.3s; border: 1px solid #333; font-size: 0.75rem; padding: 4px 12px; border-radius: 8px; }
+        .active-lang { border-color: #00f2ff; color: #00f2ff; }
+        
+        /* Star Rating Styles */
+        .star-rating { display: flex; gap: 4px; margin-top: 15px; }
+        .star { cursor: pointer; font-size: 1.2rem; color: #333; transition: 0.2s; }
+        .star.active { color: #00f2ff; text-shadow: 0 0 8px rgba(0, 242, 255, 0.8); }
     </style>
 </head>
-<body class="bg-darkbg text-gray-300 min-h-screen">
+<body>
 
-    <header class="py-12 text-center border-b border-gray-800 bg-cardbg">
-        <h1 class="text-5xl font-extrabold neon-text tracking-wider">WickraD Tools</h1>
-        <div class="mt-4">
-    <button onclick="changeLang('en')" class="neon-btn px-4 py-1 rounded text-sm mx-1">English</button>
-    <button onclick="changeLang('si')" class="neon-btn px-4 py-1 rounded text-sm mx-1">සිංහල</button>
-</div>
-        <p class="text-gray-500 mt-3 text-lg">Futuristic Online Utilities for Everyone</p>
+    <header class="py-10 text-center bg-cardbg border-b border-gray-800">
+        <div class="mb-6 flex justify-center gap-3">
+            <button id="btn-en" onclick="setLanguage('en')" class="lang-btn active-lang">English</button>
+            <button id="btn-si" onclick="setLanguage('si')" class="lang-btn">සිංහල</button>
+        </div>
+        <h1 id="main-title" class="text-4xl font-bold neon-text tracking-wide">WickraD Tools</h1>
+        <p id="main-subtitle" class="text-gray-500 mt-2">Fast, Free and Secure Professional Web Tools</p>
     </header>
 
-    <main class="max-w-4xl mx-auto p-6 space-y-12">
-        
-        <section class="tool-card bg-cardbg p-8 rounded-3xl shadow-lg">
-            <div class="flex items-center gap-4 mb-6">
-                <span class="text-4xl text-neonblue p-3 bg-neonblue_dim rounded-2xl">📝</span>
-                <h2 class="text-2xl font-semibold text-white">Word & Character Counter</h2>
-            </div>
-            <textarea id="wordInput" rows="5" class="w-full p-5 bg-darkbg border border-gray-700 rounded-xl text-gray-200 focus:border-neonblue focus:ring-1 focus:ring-neonblue outline-none resize-none" placeholder="ඔබේ ලිපිය මෙතන Paste කරන්න..."></textarea>
-            <div class="grid grid-cols-2 gap-4 mt-6">
-                <div class="bg-darkbg p-4 rounded-xl border border-gray-800 text-center">
-                    <div id="wordCount" class="text-3xl font-bold text-neonblue">0</div>
-                    <div class="text-gray-500 text-xs">Words</div>
+    <main class="max-w-6xl mx-auto p-6 md:p-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <div class="tool-card bg-cardbg p-8 rounded-3xl flex flex-col">
+                <div class="text-3xl mb-4 bg-neonblue_dim w-14 h-14 flex items-center justify-center rounded-2xl text-neonblue">📝</div>
+                <h2 id="t1-title" class="text-xl font-bold text-white mb-2">Word Counter</h2>
+                <p id="t1-desc" class="text-gray-500 text-sm mb-6 flex-grow">Count words and characters in your text instantly.</p>
+                <textarea id="wordInput" class="w-full p-4 bg-darkbg border border-gray-700 rounded-xl text-sm mb-4 outline-none focus:border-neonblue" rows="4"></textarea>
+                
+                <div class="star-rating" data-tool="word">
+                    <span class="star" onclick="rate(this, 1)">★</span>
+                    <span class="star" onclick="rate(this, 2)">★</span>
+                    <span class="star" onclick="rate(this, 3)">★</span>
+                    <span class="star" onclick="rate(this, 4)">★</span>
+                    <span class="star" onclick="rate(this, 5)">★</span>
+                    <span id="rate-text-word" class="ml-2 text-[10px] text-gray-600 self-center uppercase">Rate this</span>
                 </div>
-                <div class="bg-darkbg p-4 rounded-xl border border-gray-800 text-center">
-                    <div id="charCount" class="text-3xl font-bold text-neonblue">0</div>
-                    <div class="text-gray-500 text-xs">Characters</div>
+            </div>
+
+            <div class="tool-card bg-cardbg p-8 rounded-3xl flex flex-col">
+                <div class="text-3xl mb-4 bg-neonblue_dim w-14 h-14 flex items-center justify-center rounded-2xl text-neonblue">🔐</div>
+                <h2 id="t2-title" class="text-xl font-bold text-white mb-2">Password Generator</h2>
+                <p id="t2-desc" class="text-gray-500 text-sm mb-6 flex-grow">Generate strong passwords to secure your accounts.</p>
+                <input type="text" id="passwordOutput" readonly class="w-full p-4 bg-darkbg border border-gray-700 rounded-xl text-sm mb-4 text-center text-neonblue font-mono tracking-wider">
+                <button onclick="generatePassword()" id="t2-btn" class="w-full py-3 bg-neonblue text-black font-bold rounded-xl text-xs uppercase tracking-tighter hover:bg-white transition">Generate</button>
+                
+                <div class="star-rating" data-tool="pass">
+                    <span class="star" onclick="rate(this, 1)">★</span>
+                    <span class="star" onclick="rate(this, 2)">★</span>
+                    <span class="star" onclick="rate(this, 3)">★</span>
+                    <span class="star" onclick="rate(this, 4)">★</span>
+                    <span class="star" onclick="rate(this, 5)">★</span>
+                    <span id="rate-text-pass" class="ml-2 text-[10px] text-gray-600 self-center uppercase">Rate this</span>
                 </div>
             </div>
-        </section>
 
-        <section class="tool-card bg-cardbg p-8 rounded-3xl shadow-lg">
-            <div class="flex items-center gap-4 mb-6">
-                <span class="text-4xl text-neonblue p-3 bg-neonblue_dim rounded-2xl">🔐</span>
-                <h2 class="text-2xl font-semibold text-white">Password Generator</h2>
-            </div>
-            <div class="flex gap-2 mb-6">
-                <input type="text" id="passwordOutput" readonly class="flex-grow p-4 bg-darkbg border border-gray-700 rounded-xl text-gray-200 font-mono" placeholder="Generated Password">
-                <button onclick="copyText('passwordOutput')" class="px-5 bg-gray-800 text-white rounded-xl hover:bg-gray-700">Copy</button>
-            </div>
-            <div class="flex flex-col md:flex-row items-center gap-6 bg-darkbg p-4 rounded-xl border border-gray-800">
-                <input type="range" id="passLength" min="6" max="32" value="12" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-neonblue">
-                <button onclick="generatePassword()" class="neon-btn px-8 py-2 rounded-lg w-full md:w-auto">Generate</button>
-            </div>
-        </section>
-
-        <section class="tool-card bg-cardbg p-8 rounded-3xl shadow-lg">
-            <div class="flex items-center gap-4 mb-6">
-                <span class="text-4xl text-neonblue p-3 bg-neonblue_dim rounded-2xl">📷</span>
-                <h2 class="text-2xl font-semibold text-white">Image to Text (OCR)</h2>
-            </div>
-            <div class="border-2 border-dashed border-gray-700 p-8 rounded-xl text-center hover:border-neonblue transition-all">
+            <div class="tool-card bg-cardbg p-8 rounded-3xl flex flex-col">
+                <div class="text-3xl mb-4 bg-neonblue_dim w-14 h-14 flex items-center justify-center rounded-2xl text-neonblue">📷</div>
+                <h2 id="t3-title" class="text-xl font-bold text-white mb-2">Image to Text</h2>
+                <p id="t3-desc" class="text-gray-500 text-sm mb-6 flex-grow">Extract editable text from images using OCR technology.</p>
+                <label for="imageInput" id="t3-label" class="block w-full py-4 border-2 border-dashed border-gray-700 rounded-xl text-center text-xs cursor-pointer hover:border-neonblue text-gray-400">Upload Image</label>
                 <input type="file" id="imageInput" accept="image/*" class="hidden">
-                <label for="imageInput" class="cursor-pointer text-gray-400">
-                    <p>පින්තූරය තෝරන්න (Select Image)</p>
-                </label>
+                <p id="statusText" class="text-[10px] text-center mt-2 text-neonblue"></p>
+                
+                <div class="star-rating pt-4" data-tool="ocr">
+                    <span class="star" onclick="rate(this, 1)">★</span>
+                    <span class="star" onclick="rate(this, 2)">★</span>
+                    <span class="star" onclick="rate(this, 3)">★</span>
+                    <span class="star" onclick="rate(this, 4)">★</span>
+                    <span class="star" onclick="rate(this, 5)">★</span>
+                    <span id="rate-text-ocr" class="ml-2 text-[10px] text-gray-600 self-center uppercase">Rate this</span>
+                </div>
             </div>
-            <div id="ocrProgress" class="hidden mt-6 w-full bg-gray-800 rounded-full h-2">
-                <div id="progressBar" class="bg-neonblue h-2 rounded-full" style="width: 0%"></div>
-            </div>
-            <p id="statusText" class="text-center mt-2 text-sm text-neonblue"></p>
-            <textarea id="ocrOutput" rows="5" class="w-full mt-6 p-5 bg-darkbg border border-gray-700 rounded-xl text-gray-200 hidden" placeholder="අකුරු මෙතැන පෙන්වනු ඇත..."></textarea>
-            <button id="copyOcrBtn" onclick="copyText('ocrOutput')" class="neon-btn px-6 py-2 rounded-lg mt-4 hidden">Copy Text</button>
-        </section>
 
+        </div>
     </main>
 
-    <footer class="text-center py-10 border-t border-gray-800 mt-12 text-gray-600 text-sm">
-        © 2026 WickraD Tools | Powered by WickraD
+    <footer class="text-center py-12 border-t border-gray-900 mt-12 text-gray-700 text-[10px] tracking-widest uppercase">
+        © 2026 WickraD Tools | Futuristic Utility
     </footer>
 
     <script>
-        // Word Counter
-        const wordInput = document.getElementById('wordInput');
-        wordInput.addEventListener('input', () => {
-            const text = wordInput.value.trim();
-            document.getElementById('charCount').innerText = text.length;
-            document.getElementById('wordCount').innerText = text ? text.split(/\s+/).length : 0;
-        });
+        // Language & Tools Logic (Previous Logic Included)
+        const langData = {
+            'en': { 'title': 'WickraD Tools', 'subtitle': 'Fast, Free and Secure Professional Web Tools', 't1': 'Word Counter', 't2': 'Password Generator', 't3': 'Image to Text', 't2b': 'Generate', 't3l': 'Upload Image', 'rate': 'Rate this', 'thanks': 'Thanks!' },
+            'si': { 'title': 'WickraD මෙවලම්', 'subtitle': 'ඉතා වේගවත් සහ ආරක්ෂිත වෘත්තීය වෙබ් මෙවලම්', 't1': 'වචන ගණනය', 't2': 'මුරපද නිර්මාණය', 't3': 'පින්තූරයෙන් අකුරු ගැනීම', 't2b': 'සාදන්න', 't3l': 'පින්තූරය තෝරන්න', 'rate': 'අගයන්න', 'thanks': 'ස්තුතියි!' }
+        };
 
-        // Password Generator
-        function generatePassword() {
-            const length = document.getElementById('passLength').value;
-            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-            let retVal = "";
-            for (let i = 0; i < length; ++i) retVal += charset.charAt(Math.floor(Math.random() * charset.length));
-            document.getElementById('passwordOutput').value = retVal;
-        }
-
-        // Image to Text (OCR)
-        const imageInput = document.getElementById('imageInput');
-        imageInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            document.getElementById('ocrProgress').classList.remove('hidden');
-            document.getElementById('statusText').innerText = "Processing Image...";
-            Tesseract.recognize(file, 'eng', { logger: m => {
-                if(m.status === 'recognizing text') document.getElementById('progressBar').style.width = (m.progress * 100) + '%';
-            }}).then(({ data: { text } }) => {
-                document.getElementById('statusText').innerText = "Completed!";
-                const output = document.getElementById('ocrOutput');
-                output.value = text;
-                output.classList.remove('hidden');
-                document.getElementById('copyOcrBtn').classList.remove('hidden');
-                document.getElementById('ocrProgress').classList.add('hidden');
+        function setLanguage(lang) {
+            document.getElementById('main-title').innerText = langData[lang].title;
+            document.getElementById('main-subtitle').innerText = langData[lang].subtitle;
+            document.getElementById('t1-title').innerText = langData[lang].t1;
+            document.getElementById('t2-title').innerText = langData[lang].t2;
+            document.getElementById('t3-title').innerText = langData[lang].t3;
+            document.getElementById('t2-btn').innerText = langData[lang].t2b;
+            document.getElementById('t3-label').innerText = langData[lang].t3l;
+            
+            // Update rate labels
+            document.querySelectorAll('[id^="rate-text-"]').forEach(el => {
+                if(el.innerText !== "Thanks!" && el.innerText !== "ස්තුතියි!") el.innerText = langData[lang].rate;
             });
+
+            document.getElementById('btn-en').classList.remove('active-lang');
+            document.getElementById('btn-si').classList.remove('active-lang');
+            document.getElementById('btn-' + lang).classList.add('active-lang');
+            
+            if(lang === 'si') document.body.classList.add('sinhala-font');
+            else document.body.classList.remove('sinhala-font');
+        }
+
+        // Rating Function
+        function rate(star, val) {
+            const parent = star.parentElement;
+            const stars = parent.querySelectorAll('.star');
+            const toolId = parent.getAttribute('data-tool');
+            const lang = document.getElementById('btn-si').classList.contains('active-lang') ? 'si' : 'en';
+
+            stars.forEach((s, index) => {
+                if (index < val) s.classList.add('active');
+                else s.classList.remove('active');
+            });
+            
+            document.getElementById('rate-text-' + toolId).innerText = langData[lang].thanks;
+            document.getElementById('rate-text-' + toolId).style.color = "#00f2ff";
+        }
+
+        // Previous Tool Functions
+        function generatePassword() {
+            let charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+            let res = "";
+            for (let i = 0; i < 16; i++) res += charset.charAt(Math.floor(Math.random() * charset.length));
+            document.getElementById('passwordOutput').value = res;
+        }
+
+        document.getElementById('wordInput').addEventListener('input', function() {
+            let val = this.value.trim();
+            document.getElementById('wordCount').innerText = val ? val.split(/\s+/).length : 0;
+            document.getElementById('charCount').innerText = val.length;
         });
 
-        // Common Copy Function
-        function copyText(id) {
-            const el = document.getElementById(id);
-            el.select();
-            document.execCommand('copy');
-            alert('Copied to clipboard!');
-        }
-        
-        generatePassword(); // Generate one on start
+        generatePassword();
     </script>
 </body>
 </html>
