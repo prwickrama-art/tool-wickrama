@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WickraD Tools - Neon Dark Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0a0a0c',
+                        cardbg: '#141417',
+                        neonblue: '#00f2ff',
+                        neonblue_dim: 'rgba(0, 242, 255, 0.1)',
+                    },
+                    boxShadow: {
+                        'neon': '0 0 15px rgba(0, 242, 255, 0.5)',
+                        'neon-hover': '0 0 25px rgba(0, 242, 255, 0.8)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; }
+        
+        .tool-card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
+            border-color: rgba(0, 242, 255, 0.3);
+        }
+
+        .neon-text {
+            color: #00f2ff;
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.7);
+        }
+
+        .neon-btn {
+            background: transparent;
+            border: 2px solid #00f2ff;
+            color: #00f2ff;
+            transition: all 0.3s ease;
+        }
+
+        .neon-btn:hover {
+            background: #00f2ff;
+            color: #0a0a0c;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-darkbg text-gray-300 min-h-screen">
+
+    <header class="py-12 text-center border-b border-gray-800 bg-cardbg">
+        <h1 class="text-5xl font-extrabold neon-text tracking-wider">WickraD Tools</h1>
+        <p class="text-gray-500 mt-3 text-lg">Futuristic Online Utilities for Everyone</p>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6 md:p-12 space-y-12">
+        
+        <section class="tool-card bg-cardbg p-8 rounded-3xl shadow-lg">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-4xl text-neonblue p-3 bg-neonblue_dim rounded-2xl">📝</span>
+                <h2 class="text-3xl font-semibold text-white">Word & Character Counter</h2>
+            </div>
+            
+            <textarea id="wordInput" rows="8" class="w-full p-5 bg-darkbg border border-gray-700 rounded-xl text-gray-200 focus:border-neonblue focus:ring-1 focus:ring-neonblue outline-none resize-none" placeholder="ඔබේ ලිපිය මෙතන Paste කරන්න..."></textarea>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 text-center">
+                <div class="bg-darkbg p-5 rounded-xl border border-gray-800">
+                    <div id="wordCount" class="text-4xl font-bold text-neonblue">0</div>
+                    <div class="text-gray-500 text-sm mt-1">Words (වචන)</div>
+                </div>
+                <div class="bg-darkbg p-5 rounded-xl border border-gray-800">
+                    <div id="charCount" class="text-4xl font-bold text-neonblue">0</div>
+                    <div class="text-gray-500 text-sm mt-1">Characters (අකුරු)</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="tool-card bg-cardbg p-8 rounded-3xl shadow-lg">
+            <div class="flex items-center gap-4 mb-6">
+                <span class="text-4xl text-neonblue p-3 bg-neonblue_dim rounded-2xl">🔐</span>
+                <h2 class="text-3xl font-semibold text-white">Secure Password Generator</h2>
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-4 mb-6">
+                <input type="text" id="passwordOutput" readonly class="flex-grow p-5 bg-darkbg border border-gray-700 rounded-xl text-gray-200 text-lg font-mono" placeholder="Generated Password">
+                <button onclick="copyPassword()" class="p-5 bg-gray-800 text-white rounded-xl hover:bg-gray-700">Copy</button>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center gap-6 bg-darkbg p-6 rounded-xl border border-gray-800">
+                <label class="text-gray-400">Length: <span id="lengthVal" class="text-neonblue font-bold">12</span></label>
+                <input type="range" id="passLength" min="6" max="32" value="12" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-neonblue">
+                <button onclick="generatePassword()" class="neon-btn px-10 py-3 rounded-lg font-semibold w-full md:w-auto">Generate</button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-12 border-t border-gray-800 mt-12 bg-cardbg text-gray-600">
+        © 2026 WickraD Tools | Neon Dark Edition | Powered by WickraD
+    </footer>
+
+    <script>
+        // --- Word Counter Logic ---
+        const wordInput = document.getElementById('wordInput');
+        const wordCount = document.getElementById('wordCount');
+        const charCount = document.getElementById('charCount');
+
+        wordInput.addEventListener('input', () => {
+            const text = wordInput.value;
+            charCount.innerText = text.length;
+            
+            const words = text.trim().split(/\s+/);
+            wordCount.innerText = text.trim() === '' ? 0 : words.length;
+        });
+
+        // --- Password Generator Logic ---
+        const passwordOutput = document.getElementById('passwordOutput');
+        const passLength = document.getElementById('passLength');
+        const lengthVal = document.getElementById('lengthVal');
+
+        passLength.addEventListener('input', () => {
+            lengthVal.innerText = passLength.value;
+        });
+
+        function generatePassword() {
+            const length = passLength.value;
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+            let retVal = "";
+            for (let i = 0, n = charset.length; i < length; ++i) {
+                retVal += charset.charAt(Math.floor(Math.random() * n));
+            }
+            passwordOutput.value = retVal;
+            passwordOutput.classList.add('neon-text'); // Flash neon on generate
+            setTimeout(()=> passwordOutput.classList.remove('neon-text'), 300);
+        }
+
+        function copyPassword() {
+            passwordOutput.select();
+            document.execCommand('copy');
+            alert('Password copied to clipboard!');
+        }
+
+        // Generate a password on load
+        generatePassword();
+    </script>
+
+</body>
+</html>
